@@ -1,5 +1,16 @@
 # 🚀 NOVA AI — Intelligent Personal Assistant
 
+[![GitHub Repository](https://img.shields.io/badge/GitHub-Nova--AI-181717?logo=github)](https://github.com/vihyas/Nova-AI)
+[![Python Version](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)](https://python.org)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.115%2B-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+[![Status](https://img.shields.io/badge/Status-Active%20%26%20Ready-emerald)](#)
+
+> 🌐 **Live Web Application**: [http://127.0.0.1:8000](http://127.0.0.1:8000) *(or fallback [http://127.0.0.1:8001](http://127.0.0.1:8001))*  
+> 📑 **Interactive API Docs (Swagger UI)**: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)  
+> 📦 **GitHub Repository**: [https://github.com/vihyas/Nova-AI](https://github.com/vihyas/Nova-AI)
+
+---
+
 **NOVA AI** is a state-of-the-art multimodal AI personal assistant and productivity platform. Built as a **Premium AI Agent Platform (Version C)**, it unifies conversational intelligence, voice agents (STT/TTS), autonomous tool execution, PDF document intelligence (RAG), long-term personal memory, and productivity analytics in a modern web dashboard.
 
 ---

@@ -26,3 +26,4 @@ data/*.db-shm
 # IDEs
 .vscode/
 .idea/
+

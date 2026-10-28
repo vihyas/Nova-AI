@@ -6,6 +6,8 @@ Launcher Script
 import sys
 import os
 import socket
+import threading
+import webbrowser
 import uvicorn
 from pathlib import Path
 
@@ -46,6 +48,15 @@ def main():
     print(f"👉 API Documentation: http://{host}:{port}/docs")
     print(f"👉 Mode: Hybrid Multi-Agent Platform (Gemini / OpenAI / Offline)")
     print("-" * 65)
+
+    # Automatically launch default browser to the web app
+    def open_browser():
+        try:
+            webbrowser.open(f"http://{host}:{port}")
+        except Exception:
+            pass
+
+    threading.Timer(1.2, open_browser).start()
 
     uvicorn.run(
         "backend.app.main:app",
