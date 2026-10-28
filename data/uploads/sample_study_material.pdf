@@ -1,0 +1,73 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R 4 0 R] /Count 2 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 5 0 R /Resources << /Font << /F1 7 0 R >> >> >>
+endobj
+4 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 6 0 R /Resources << /Font << /F1 7 0 R >> >> >>
+endobj
+5 0 obj
+<< /Length 506 >>
+stream
+BT
+/F1 16 Tf
+50 720 Td
+(NOVA AI: Data Structures & Neural Systems - Page 1) Tj
+/F1 12 Tf
+0 -40 Td
+(Overview of Linked Lists and Algorithmic Complexity) Tj
+0 -25 Td
+(A Singly Linked List consists of sequential nodes where each node contains data) Tj
+0 -20 Td
+(and a reference pointer to the subsequent node. Access time is O(n).) Tj
+0 -25 Td
+(Historical Milestone: In October 2026, autonomous multi-agent systems reached) Tj
+0 -20 Td
+(human-parity in structured task planning and execution workflows.) Tj
+ET
+endstream
+endobj
+6 0 obj
+<< /Length 532 >>
+stream
+BT
+/F1 16 Tf
+50 720 Td
+(NOVA AI: Machine Learning Architecture - Page 2) Tj
+/F1 12 Tf
+0 -40 Td
+(Retrieval-Augmented Generation RAG and Vector Embeddings) Tj
+0 -25 Td
+(RAG systems partition extensive documents into semantic chunks and compute) Tj
+0 -20 Td
+(cosine similarity between query vectors and stored chunk representations.) Tj
+0 -25 Td
+(Exam Question 1: Explain the difference between array indexing and linked list traversals.) Tj
+0 -20 Td
+(Milestone: Spring Semester Exam scheduled for November 15, 2026 at 10:00 AM.) Tj
+ET
+endstream
+endobj
+7 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+xref
+0 8
+0000000000 65535 f 
+0000000010 00000 n 
+0000000060 00000 n 
+0000000120 00000 n 
+0000000235 00000 n 
+0000000350 00000 n 
+0000000500 00000 n 
+0000000650 00000 n 
+trailer
+<< /Size 8 /Root 1 0 R >>
+startxref
+720
+%%EOF

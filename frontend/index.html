@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NOVA AI — Intelligent Personal Assistant</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="/static/css/style.css">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            nova: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+              900: '#312e81',
+              950: '#090d16'
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-[#090d16] text-slate-100 min-h-screen flex flex-col md:flex-row antialiased selection:bg-indigo-500 selection:text-white">
+
+  <!-- Sidebar Navigation -->
+  <aside class="w-full md:w-64 glass-panel border-r border-slate-800 flex flex-col shrink-0 z-30">
+    <div class="p-5 flex items-center justify-between border-b border-slate-800">
+      <div class="flex items-center space-x-3">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center font-black text-white text-lg shadow-lg shadow-indigo-500/30">
+          N
+        </div>
+        <div>
+          <h1 class="font-extrabold text-base tracking-tight gradient-text">NOVA AI</h1>
+          <p class="text-[10px] text-slate-400 font-medium">Personal Assistant v3.0</p>
+        </div>
+      </div>
+      <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-950 text-emerald-400 border border-emerald-800">
+        <span class="w-1.5 h-1.5 mr-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Ready
+      </span>
+    </div>
+
+    <!-- Nav Items -->
+    <nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+      <a href="#dashboard" data-view="dashboard" class="nav-link flex items-center px-3 py-2.5 rounded-xl text-sm font-medium transition border border-transparent">
+        <span class="mr-3 text-lg">🚀</span> Dashboard
+      </a>
+      <a href="#assistant" data-view="assistant" class="nav-link flex items-center px-3 py-2.5 rounded-xl text-sm font-medium transition border border-transparent">
+        <span class="mr-3 text-lg">💬</span> AI Assistant & Voice
+      </a>
+      <a href="#tasks" data-view="tasks" class="nav-link flex items-center px-3 py-2.5 rounded-xl text-sm font-medium transition border border-transparent">
+        <span class="mr-3 text-lg">📋</span> Task Manager
+      </a>
+      <a href="#calendar" data-view="calendar" class="nav-link flex items-center px-3 py-2.5 rounded-xl text-sm font-medium transition border border-transparent">
+        <span class="mr-3 text-lg">📅</span> Calendar & Reminders
+      </a>
+      <a href="#knowledge" data-view="knowledge" class="nav-link flex items-center px-3 py-2.5 rounded-xl text-sm font-medium transition border border-transparent">
+        <span class="mr-3 text-lg">📚</span> Knowledge Hub (PDF)
+      </a>
+      <a href="#memory" data-view="memory" class="nav-link flex items-center px-3 py-2.5 rounded-xl text-sm font-medium transition border border-transparent">
+        <span class="mr-3 text-lg">🧠</span> Memory Vault
+      </a>
+      <a href="#analytics" data-view="analytics" class="nav-link flex items-center px-3 py-2.5 rounded-xl text-sm font-medium transition border border-transparent">
+        <span class="mr-3 text-lg">📊</span> Productivity Analytics
+      </a>
+      <a href="#settings" data-view="settings" class="nav-link flex items-center px-3 py-2.5 rounded-xl text-sm font-medium transition border border-transparent">
+        <span class="mr-3 text-lg">⚙️</span> Settings & Models
+      </a>
+    </nav>
+
+    <!-- Sidebar Footer / Quick Agent Status -->
+    <div class="p-4 border-t border-slate-800 bg-slate-900/40">
+      <div class="flex items-center justify-between text-xs text-slate-400 mb-2">
+        <span>Active Engine</span>
+        <span id="header-provider-badge" class="font-bold text-indigo-400">GEMINI</span>
+      </div>
+      <div class="text-[11px] text-slate-500">
+        Hybrid Multi-Agent Orchestrator
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Workspace Area -->
+  <main class="flex-1 flex flex-col h-screen overflow-hidden">
+    <!-- Header Bar -->
+    <header class="h-16 glass-panel border-b border-slate-800 flex items-center justify-between px-6 shrink-0 z-20">
+      <div class="flex items-center space-x-3">
+        <h2 id="current-view-title" class="text-base font-bold text-slate-200">Workspace</h2>
+      </div>
+
+      <div class="flex items-center space-x-3">
+        <!-- Text-to-speech toggle -->
+        <label class="flex items-center space-x-2 text-xs text-slate-400 cursor-pointer">
+          <input type="checkbox" id="enable-tts-toggle" checked class="rounded border-slate-700 bg-slate-800 text-indigo-600 focus:ring-0">
+          <span>Spoken Responses</span>
+        </label>
+        
+        <button id="open-create-task-modal" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-semibold shadow-md shadow-indigo-600/30 flex items-center space-x-1.5 transition">
+          <span>+ New Task</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Dynamic Content Area -->
+    <div class="flex-1 overflow-y-auto p-4 md:p-8">
+
+      <!-- ================= 1. DASHBOARD VIEW ================= -->
+      <section id="view-dashboard" class="view-section space-y-6">
+        <!-- Hero / Natural Language Bar -->
+        <div class="p-6 rounded-2xl glass-card border border-indigo-500/20 glow-primary">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+            <div>
+              <h3 class="text-xl font-bold text-white">Good evening! What would you like to accomplish?</h3>
+              <p class="text-xs text-slate-400 mt-1">Speak or type naturally. NOVA will schedule tasks, manage goals, and extract dates automatically.</p>
+            </div>
+            <div class="flex items-center space-x-2">
+              <span class="text-xs px-2.5 py-1 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/30">Natural Language Intent Ready</span>
+            </div>
+          </div>
+
+          <div class="flex items-center space-x-2">
+            <input type="text" id="nl-task-input" placeholder="Try: 'Create a task to study Java for two hours tomorrow at 6 PM' or 'Study ML at 8 PM'" class="flex-1 glass-input rounded-xl px-4 py-3 text-sm focus:outline-none">
+            <button id="nl-task-submit" class="px-5 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-semibold text-xs rounded-xl shadow-lg shadow-indigo-600/30 transition flex items-center space-x-1">
+              <span>Execute</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Quick Stats Grid -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div class="p-4 rounded-xl glass-card">
+            <span class="text-xs font-medium text-slate-400">Completion Rate</span>
+            <div id="dash-completion-rate" class="text-2xl font-black text-indigo-400 mt-1">--</div>
+            <span class="text-[10px] text-slate-500">Based on active tasks</span>
+          </div>
+          <div class="p-4 rounded-xl glass-card">
+            <span class="text-xs font-medium text-slate-400">Velocity Score</span>
+            <div id="dash-velocity-score" class="text-2xl font-black text-purple-400 mt-1">--</div>
+            <span class="text-[10px] text-slate-500">Productivity index / 100</span>
+          </div>
+          <div class="p-4 rounded-xl glass-card">
+            <span class="text-xs font-medium text-slate-400">Total Tasks</span>
+            <div id="dash-total-tasks" class="text-2xl font-black text-emerald-400 mt-1">--</div>
+            <span class="text-[10px] text-slate-500">All registered items</span>
+          </div>
+          <div class="p-4 rounded-xl glass-card">
+            <span class="text-xs font-medium text-slate-400">Urgent Bottlenecks</span>
+            <div id="dash-urgent-tasks" class="text-2xl font-black text-rose-400 mt-1">--</div>
+            <span class="text-[10px] text-slate-500">Needs immediate attention</span>
+          </div>
+        </div>
+
+        <!-- Dashboard Split Columns -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <!-- Today's Queue -->
+          <div class="glass-card rounded-2xl p-5">
+            <div class="flex items-center justify-between mb-4">
+              <h4 class="font-bold text-sm text-slate-200 flex items-center">
+                <span class="mr-2">🎯</span> Priority Task Queue
+              </h4>
+              <a href="#tasks" class="text-xs text-indigo-400 hover:underline">View All &rarr;</a>
+            </div>
+            <div id="dash-today-tasks" class="space-y-2.5">
+              <p class="text-slate-500 text-xs">Loading tasks...</p>
+            </div>
+          </div>
+
+          <!-- Upcoming Reminders -->
+          <div class="glass-card rounded-2xl p-5">
+            <div class="flex items-center justify-between mb-4">
+              <h4 class="font-bold text-sm text-slate-200 flex items-center">
+                <span class="mr-2">⏰</span> Upcoming Reminders
+              </h4>
+              <a href="#calendar" class="text-xs text-indigo-400 hover:underline">View Schedule &rarr;</a>
+            </div>
+            <div id="dash-reminders-list" class="space-y-2.5">
+              <p class="text-slate-500 text-xs">Loading reminders...</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live Autonomous Agent Execution Feed -->
+        <div class="glass-card rounded-2xl p-5">
+          <div class="flex items-center justify-between mb-3">
+            <h4 class="font-bold text-sm text-slate-200 flex items-center">
+              <span class="mr-2">⚡</span> Autonomous Agent Activity Feed
+            </h4>
+            <span class="text-[10px] text-slate-500 uppercase tracking-wider">Audit Log & Tool Triggers</span>
+          </div>
+          <div id="dash-agent-logs" class="divide-y divide-slate-800">
+            <p class="text-slate-500 text-xs py-2">Loading agent logs...</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 2. AI ASSISTANT VIEW ================= -->
+      <section id="view-assistant" class="view-section hidden flex flex-col h-[calc(100vh-8rem)]">
+        <!-- Agent Roles Selector Bar -->
+        <div class="glass-card p-3 rounded-xl mb-3 flex items-center justify-between shrink-0">
+          <div class="flex items-center space-x-1.5 overflow-x-auto text-xs">
+            <span class="text-slate-400 font-semibold mr-1">Agent:</span>
+            <button class="agent-pill-btn px-3 py-1.5 rounded-lg bg-indigo-600 text-white font-medium transition" data-agent="auto">Auto Router</button>
+            <button class="agent-pill-btn px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 font-medium hover:text-white transition" data-agent="task_architect">Task Architect</button>
+            <button class="agent-pill-btn px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 font-medium hover:text-white transition" data-agent="doc_researcher">Document Specialist</button>
+            <button class="agent-pill-btn px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 font-medium hover:text-white transition" data-agent="memory_keeper">Memory Keeper</button>
+            <button class="agent-pill-btn px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 font-medium hover:text-white transition" data-agent="productivity_coach">Productivity Coach</button>
+          </div>
+          <button id="clear-chat-btn" class="text-xs text-slate-400 hover:text-rose-400 px-2 py-1">Clear Chat</button>
+        </div>
+
+        <!-- Voice Status Banner -->
+        <div id="voice-status-indicator" class="hidden mb-3 p-2.5 rounded-lg bg-red-950/60 border border-red-500/50 text-red-200 text-xs flex items-center justify-between animate-pulse">
+          <div class="flex items-center space-x-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
+            <span class="font-medium">Listening to your voice... Speak your command clearly.</span>
+          </div>
+          <span class="text-[11px] text-red-300">Web Speech API</span>
+        </div>
+
+        <!-- Chat Messages Container -->
+        <div id="chat-messages-container" class="flex-1 overflow-y-auto glass-card rounded-2xl p-4 md:p-6 mb-3 space-y-4">
+          <!-- Messages will be dynamically rendered here -->
+        </div>
+
+        <!-- Input Bar -->
+        <div class="glass-card p-2 rounded-2xl flex items-center space-x-2 shrink-0">
+          <button id="chat-mic-btn" class="w-11 h-11 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 flex items-center justify-center transition text-lg shrink-0 shadow-inner" title="Click to speak">
+            🎤
+          </button>
+          <input type="text" id="chat-input" placeholder="Message NOVA or speak..." class="flex-1 glass-input rounded-xl px-4 py-3 text-sm focus:outline-none">
+          <button id="chat-send-btn" class="w-11 h-11 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white flex items-center justify-center transition font-bold shrink-0 shadow-lg shadow-indigo-600/30">
+            ➤
+          </button>
+        </div>
+      </section>
+
+      <!-- ================= 3. TASK MANAGER VIEW ================= -->
+      <section id="view-tasks" class="view-section hidden space-y-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h3 class="text-lg font-bold text-white">Task Management Studio</h3>
+            <p class="text-xs text-slate-400">Organize, schedule, and execute tasks via natural language or Kanban filters.</p>
+          </div>
+          <div class="flex items-center space-x-1.5 text-xs bg-slate-900 p-1 rounded-xl border border-slate-800">
+            <button class="task-filter-btn px-3 py-1.5 rounded-lg bg-indigo-600 text-white" data-filter="all">All</button>
+            <button class="task-filter-btn px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400" data-filter="pending">Pending</button>
+            <button class="task-filter-btn px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400" data-filter="in_progress">In Progress</button>
+            <button class="task-filter-btn px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400" data-filter="completed">Completed</button>
+            <button class="task-filter-btn px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400" data-filter="urgent">Urgent</button>
+          </div>
+        </div>
+
+        <div id="tasks-list-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <!-- Dynamic tasks rendered here -->
+        </div>
+      </section>
+
+      <!-- ================= 4. CALENDAR & REMINDERS VIEW ================= -->
+      <section id="view-calendar" class="view-section hidden space-y-6">
+        <div>
+          <h3 class="text-lg font-bold text-white">Smart Reminders & Schedule</h3>
+          <p class="text-xs text-slate-400">Manage time blocks, recurring alerts, and sync deadlines.</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <!-- Left: 7-Day Rolling Horizon Grid -->
+          <div class="lg:col-span-2 glass-card rounded-2xl p-5">
+            <h4 class="font-bold text-sm text-slate-200 mb-3">7-Day Horizon Schedule</h4>
+            <div id="calendar-schedule-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+              <!-- Days rendered here -->
+            </div>
+          </div>
+
+          <!-- Right: Add Reminder & List -->
+          <div class="space-y-4">
+            <div class="glass-card rounded-2xl p-5">
+              <h4 class="font-bold text-sm text-slate-200 mb-3">Create Reminder</h4>
+              <form id="create-reminder-form" class="space-y-3">
+                <input type="text" id="rem-title" placeholder="Reminder title..." required class="w-full glass-input rounded-lg px-3 py-2 text-xs">
+                <input type="datetime-local" id="rem-datetime" required class="w-full glass-input rounded-lg px-3 py-2 text-xs">
+                <select id="rem-recurrence" class="w-full glass-input rounded-lg px-3 py-2 text-xs bg-slate-900">
+                  <option value="none">No Recurrence (One-shot)</option>
+                  <option value="daily">Daily</option>
+                  <option value="weekly">Weekly</option>
+                </select>
+                <button type="submit" class="w-full py-2 bg-indigo-600 hover:bg-indigo-500 rounded-lg text-xs font-bold text-white transition">Schedule Reminder</button>
+              </form>
+            </div>
+
+            <div class="glass-card rounded-2xl p-5">
+              <h4 class="font-bold text-sm text-slate-200 mb-3">All Reminders</h4>
+              <div id="calendar-reminders-list" class="space-y-2">
+                <!-- Reminders list rendered here -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 5. KNOWLEDGE HUB / PDF RAG ================= -->
+      <section id="view-knowledge" class="view-section hidden space-y-6">
+        <div>
+          <h3 class="text-lg font-bold text-white">AI Document Intelligence (RAG Engine)</h3>
+          <p class="text-xs text-slate-400">Upload PDF documents, extract summaries, practice study questions, and cite supporting pages.</p>
+        </div>
+
+        <!-- PDF Upload Zone -->
+        <div id="pdf-drop-zone" class="border-2 border-dashed border-indigo-500/30 hover:border-indigo-500/70 rounded-2xl p-8 text-center cursor-pointer glass-card transition group">
+          <input type="file" id="pdf-file-input" accept=".pdf" class="hidden">
+          <div class="w-12 h-12 rounded-full bg-indigo-500/10 text-indigo-400 flex items-center justify-center mx-auto mb-3 text-2xl group-hover:scale-110 transition">
+            📄
+          </div>
+          <h4 class="text-sm font-semibold text-slate-200">Click or drag PDF here to upload & index</h4>
+          <p class="text-xs text-slate-400 mt-1">Chunking, vector embeddings, and page indexing are automatically performed.</p>
+        </div>
+
+        <!-- Interactive Document Q&A Bar -->
+        <div class="glass-card rounded-2xl p-5">
+          <h4 class="font-bold text-sm text-slate-200 mb-2">Ask Questions with Page Citations</h4>
+          <div class="flex items-center space-x-2">
+            <input type="text" id="doc-query-input" placeholder="e.g. 'What are the main conclusions in this document?' or 'Explain the key formulas'" class="flex-1 glass-input rounded-xl px-4 py-2.5 text-xs focus:outline-none">
+            <button id="doc-query-btn" class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-semibold shadow transition">
+              Search & Cite
+            </button>
+          </div>
+          <div id="doc-query-results" class="mt-4">
+            <!-- Answers and citations displayed here -->
+          </div>
+        </div>
+
+        <!-- Uploaded Documents Library -->
+        <div>
+          <h4 class="font-bold text-sm text-slate-200 mb-3">Indexed Documents Library</h4>
+          <div id="documents-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- Document cards rendered here -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 6. MEMORY VAULT VIEW ================= -->
+      <section id="view-memory" class="view-section hidden space-y-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h3 class="text-lg font-bold text-white">Personal Knowledge & Memory Vault</h3>
+            <p class="text-xs text-slate-400">NOVA remembers your preferences, learning goals, and habits across sessions.</p>
+          </div>
+          <div class="flex items-center space-x-2">
+            <button id="export-memory-btn" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg text-xs font-medium border border-slate-700 transition">
+              Export Markdown
+            </button>
+          </div>
+        </div>
+
+        <!-- Add Memory Form -->
+        <div class="glass-card rounded-2xl p-5">
+          <h4 class="font-bold text-xs uppercase tracking-wider text-slate-300 mb-3">Teach NOVA a Fact or Preference</h4>
+          <form id="add-memory-form" class="grid grid-cols-1 sm:grid-cols-4 gap-3">
+            <select id="mem-category" class="glass-input rounded-lg px-3 py-2 text-xs bg-slate-900">
+              <option value="preference">Preference</option>
+              <option value="goal">Goal</option>
+              <option value="habit">Habit</option>
+              <option value="fact">Fact</option>
+              <option value="constraint">Constraint</option>
+            </select>
+            <input type="text" id="mem-key" placeholder="Key (e.g. preferred_language)" required class="glass-input rounded-lg px-3 py-2 text-xs">
+            <input type="text" id="mem-val" placeholder="Value (e.g. Java / Machine Learning)" required class="glass-input rounded-lg px-3 py-2 text-xs">
+            <button type="submit" class="py-2 bg-indigo-600 hover:bg-indigo-500 rounded-lg text-xs font-bold text-white transition">Commit to Memory</button>
+          </form>
+        </div>
+
+        <!-- Memories Grid -->
+        <div id="memory-cards-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <!-- Memory cards rendered here -->
+        </div>
+      </section>
+
+      <!-- ================= 7. PRODUCTIVITY ANALYTICS VIEW ================= -->
+      <section id="view-analytics" class="view-section hidden space-y-6">
+        <div>
+          <h3 class="text-lg font-bold text-white">Productivity Trends & AI Coaching</h3>
+          <p class="text-xs text-slate-400">Track task completion velocity and review system benchmark metrics.</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div class="glass-card rounded-2xl p-5">
+            <h4 class="font-bold text-sm text-slate-200 mb-4">7-Day Completion Velocity</h4>
+            <div class="h-64">
+              <canvas id="trend-chart"></canvas>
+            </div>
+          </div>
+          <div class="glass-card rounded-2xl p-5">
+            <h4 class="font-bold text-sm text-slate-200 mb-4">Task Categories Breakdown</h4>
+            <div class="h-64 flex items-center justify-center">
+              <canvas id="category-chart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- AI Productivity Coaching Card -->
+        <div class="glass-card rounded-2xl p-5">
+          <h4 class="font-bold text-sm text-slate-200 mb-3 flex items-center">
+            <span class="mr-2">💡</span> Personalized AI Coaching Insights
+          </h4>
+          <div id="analytics-coaching-list" class="space-y-2">
+            <!-- Coaching insights rendered here -->
+          </div>
+        </div>
+
+        <!-- System & Academic Evaluation Benchmarks -->
+        <div class="glass-card rounded-2xl p-5">
+          <h4 class="font-bold text-sm text-slate-200 mb-3 flex items-center">
+            <span class="mr-2">🏆</span> Technical Evaluation Benchmarks
+          </h4>
+          <div id="analytics-benchmarks-list">
+            <!-- Benchmarks metrics rendered here -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 8. SETTINGS VIEW ================= -->
+      <section id="view-settings" class="view-section hidden space-y-6 max-w-4xl">
+        <div>
+          <h3 class="text-lg font-bold text-white">System Settings & LLM Configuration</h3>
+          <p class="text-xs text-slate-400">Configure your hybrid AI provider, custom API keys, and voice parameters.</p>
+        </div>
+
+        <form id="settings-form" class="glass-card rounded-2xl p-6 space-y-6">
+          <!-- Provider Selection -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Primary AI Provider</label>
+            <select name="default_provider" class="w-full glass-input rounded-xl px-4 py-2.5 text-xs bg-slate-900">
+              <option value="gemini">Google Gemini API (Recommended)</option>
+              <option value="openai">OpenAI API (GPT-4o / GPT-4o-mini)</option>
+              <option value="offline">Built-in Semantic NLP Engine (Offline Fallback)</option>
+            </select>
+            <p class="text-[11px] text-slate-500 mt-1">If no API key is provided, NOVA automatically switches to its local semantic engine.</p>
+          </div>
+
+          <!-- Gemini Configuration -->
+          <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800 space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-indigo-400">Google Gemini Configuration</span>
+              <span id="gemini-status-text" class="text-xs text-slate-400">--</span>
+            </div>
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">Gemini API Key</label>
+              <input type="password" name="gemini_api_key" placeholder="Enter GEMINI_API_KEY..." class="w-full glass-input rounded-lg px-3 py-2 text-xs">
+            </div>
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">Gemini Model</label>
+              <input type="text" name="gemini_model" value="gemini-2.5-flash" class="w-full glass-input rounded-lg px-3 py-2 text-xs">
+            </div>
+          </div>
+
+          <!-- OpenAI Configuration -->
+          <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800 space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-purple-400">OpenAI Configuration</span>
+              <span id="openai-status-text" class="text-xs text-slate-400">--</span>
+            </div>
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">OpenAI API Key</label>
+              <input type="password" name="openai_api_key" placeholder="Enter OPENAI_API_KEY..." class="w-full glass-input rounded-lg px-3 py-2 text-xs">
+            </div>
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">OpenAI Model</label>
+              <input type="text" name="openai_model" value="gpt-4o-mini" class="w-full glass-input rounded-lg px-3 py-2 text-xs">
+            </div>
+          </div>
+
+          <!-- Parameters & Language -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <div class="flex justify-between items-center mb-1">
+                <label class="text-xs text-slate-400">Temperature</label>
+                <span id="temp-value-display" class="text-xs text-indigo-400 font-bold">0.7</span>
+              </div>
+              <input type="range" name="temperature" min="0" max="1" step="0.1" value="0.7" oninput="document.getElementById('temp-value-display').textContent=this.value" class="w-full accent-indigo-500">
+            </div>
+
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">Interaction Language</label>
+              <select name="system_language" class="w-full glass-input rounded-lg px-3 py-2 text-xs bg-slate-900">
+                <option value="en">English (US)</option>
+                <option value="ta">Tamil (தமிழ்)</option>
+              </select>
+            </div>
+          </div>
+
+          <button type="submit" class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold shadow-lg shadow-indigo-600/30 transition">
+            Save Configuration
+          </button>
+        </form>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ================= MODALS ================= -->
+
+  <!-- Create Task Modal -->
+  <div id="create-task-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+    <div class="glass-panel border border-slate-700 rounded-2xl w-full max-w-md p-6 shadow-2xl">
+      <div class="flex items-center justify-between mb-4">
+        <h4 class="font-bold text-sm text-white">Create New Task</h4>
+        <button id="close-task-modal" class="text-slate-400 hover:text-white text-lg">&times;</button>
+      </div>
+
+      <form id="create-task-form" class="space-y-3">
+        <div>
+          <label class="block text-xs text-slate-400 mb-1">Title</label>
+          <input type="text" name="title" required placeholder="e.g. Study Java Multithreading" class="w-full glass-input rounded-lg px-3 py-2 text-xs">
+        </div>
+        <div>
+          <label class="block text-xs text-slate-400 mb-1">Description</label>
+          <textarea name="description" rows="2" placeholder="Optional notes..." class="w-full glass-input rounded-lg px-3 py-2 text-xs"></textarea>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs text-slate-400 mb-1">Priority</label>
+            <select name="priority" class="w-full glass-input rounded-lg px-3 py-2 text-xs bg-slate-900">
+              <option value="low">Low</option>
+              <option value="medium" selected>Medium</option>
+              <option value="high">High</option>
+              <option value="urgent">Urgent</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs text-slate-400 mb-1">Category</label>
+            <input type="text" name="category" value="Study" class="w-full glass-input rounded-lg px-3 py-2 text-xs">
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs text-slate-400 mb-1">Due Date</label>
+            <input type="datetime-local" name="due_date" class="w-full glass-input rounded-lg px-3 py-2 text-xs">
+          </div>
+          <div>
+            <label class="block text-xs text-slate-400 mb-1">Duration (Mins)</label>
+            <input type="number" name="duration_minutes" value="60" class="w-full glass-input rounded-lg px-3 py-2 text-xs">
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs text-slate-400 mb-1">Tags (comma-separated)</label>
+          <input type="text" name="tags" placeholder="java, exam, urgent" class="w-full glass-input rounded-lg px-3 py-2 text-xs">
+        </div>
+        <div class="pt-2 flex justify-end space-x-2">
+          <button type="button" onclick="document.getElementById('create-task-modal').classList.add('hidden')" class="px-3 py-1.5 rounded-lg text-xs text-slate-400 hover:text-white">Cancel</button>
+          <button type="submit" class="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-500 rounded-lg text-xs font-bold text-white shadow">Create Task</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Study Guide Modal -->
+  <div id="study-guide-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+    <div class="glass-panel border border-slate-700 rounded-2xl w-full max-w-2xl max-h-[85vh] overflow-y-auto p-6 shadow-2xl">
+      <div class="flex items-center justify-between mb-4 pb-2 border-b border-slate-800">
+        <h4 class="font-bold text-base text-white">📖 Generated Study Guide & Flashcards</h4>
+        <button id="close-guide-modal" class="text-slate-400 hover:text-white text-lg">&times;</button>
+      </div>
+      <div id="study-guide-content">
+        <!-- Content rendered here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 space-y-2 max-w-sm"></div>
+
+  <!-- Load Main Application Script -->
+  <script type="module" src="/static/js/app.js"></script>
+</body>
+</html>
+
