@@ -5,8 +5,8 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115%2B-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
 [![Status](https://img.shields.io/badge/Status-Active%20%26%20Ready-emerald)](#)
 
-> 🌐 **Live Web Application**: [http://127.0.0.1:8000](http://127.0.0.1:8000) *(or fallback [http://127.0.0.1:8001](http://127.0.0.1:8001))*  
-> 📑 **Interactive API Docs (Swagger UI)**: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)  
+> 🌐 **Live Web Application**:[http://127.0.0.1:8001](http://127.0.0.1:8001))*  
+
 > 📦 **GitHub Repository**: [https://github.com/vihyas/Nova-AI](https://github.com/vihyas/Nova-AI)
 
 ---
