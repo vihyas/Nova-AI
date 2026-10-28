@@ -97,13 +97,9 @@ python3 run.py
 
 Open your browser and navigate to:
 ```
-http://127.0.0.1:8000
+http://127.0.0.1:8001/
 ```
 
-Interactive OpenAPI Swagger documentation is available at:
-```
-http://127.0.0.1:8000/docs
-```
 
 ---
 
